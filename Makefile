@@ -16,4 +16,4 @@ run:
 	    -v /home/$(USER)/.config/VirtualBox:/home/$(USER)/.config/VirtualBox \
 	    -v /home/$(USER)/VirtualBox\ VMs:/home/$(USER)/VirtualBox\ VMs \
 	    -v /home/$(USER)/.vagrant.d:/home/$(USER)/.vagrant.d \
-	    ralex/salt-toolbox:latest /bin/bash
+	    ralex/salt-cloudbox:latest /bin/bash
