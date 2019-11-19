@@ -1,0 +1,23 @@
+FROM debian:buster
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        gnupg2
+
+RUN curl -s https://db.debian.org/fetchkey.cgi?fingerprint=FEDEC1CB337BCF509F43C2243914B532F4DFBE99 | apt-key add - \
+    && echo 'deb https://people.debian.org/~lucas/virtualbox-buster/ ./' > /etc/apt/sources.list.d/virtualbox-unofficial.list
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        virtualbox \
+        vagrant \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN VERSION=$(vboxmanage --version | tail -1 | cut -d'_' -f1) && \
+    curl -s -Lo Oracle_VM_VirtualBox_Extension_Pack-${VERSION}.vbox-extpack \
+        http://download.virtualbox.org/virtualbox/${VERSION}/Oracle_VM_VirtualBox_Extension_Pack-${VERSION}.vbox-extpack && \
+    yes | vboxmanage extpack install Oracle_VM_VirtualBox_Extension_Pack-${VERSION}.vbox-extpack && \
+    rm -rf Oracle_VM_VirtualBox_Extension_Pack-${VERSION}.vbox-extpack
+
+VOLUME /dev/vboxdrv

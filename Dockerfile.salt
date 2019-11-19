@@ -1,0 +1,17 @@
+FROM debian:buster
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        wget \
+        gnupg2
+
+RUN wget -q -O - https://repo.saltstack.com/py3/debian/10/amd64/latest/SALTSTACK-GPG-KEY.pub | apt-key add - \
+    && echo 'deb http://repo.saltstack.com/py3/debian/10/amd64/latest buster main' > /etc/apt/sources.list.d/saltstack.list
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        salt-master \
+        salt-cloud \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY salt/files/cloud.providers.d/virtualbox.conf /etc/salt/cloud.providers.d/virtualbox.conf
+COPY salt/files/cloud.profiles.d/virtualbox.conf /etc/salt/cloud.profiles.d/virtualbox.conf
