@@ -12,12 +12,14 @@ _For testing purpose only._
 
 # Usage
 
-## Build docker images
+## Build docker images
+
 ```
 make build
 ```
 
-## Run project
+## Run project
+
 ```
 make run
 ```
