@@ -4,13 +4,14 @@ all: build run
 build:
 	docker build . -f Dockerfile.salt -t ralex/salt
 	docker build . -f Dockerfile.vbox -t ralex/vbox
-	docker build . --build-arg USER -t ralex/salt-cloudbox
+	docker build --no-cache . --build-arg USER -t ralex/salt-cloudbox
 
 run:
 	docker run -ti --rm \
 	    --name salt-cloudbox \
 	    --device=/dev/vboxdrv \
 	    --network=host \
+	    --privileged=true \
 	    -v /tmp:/tmp \
 	    -v /dev/vboxdrv:/dev/vboxdrv \
 	    -v /home/$(USER)/.config/VirtualBox:/home/$(USER)/.config/VirtualBox \

@@ -13,6 +13,4 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         salt-cloud \
     && rm -rf /var/lib/apt/lists/*
 
-COPY salt/files/cloud /etc/salt/cloud
-COPY salt/files/cloud.providers.d/vagrant.conf /etc/salt/cloud.providers.d/vagrant.conf
-COPY salt/files/cloud.profiles.d/vagrant.conf /etc/salt/cloud.profiles.d/vagrant.conf
+COPY salt/files/ /etc/salt
