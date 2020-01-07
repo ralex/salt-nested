@@ -1,0 +1,38 @@
+def get_good_ifc()   # try to find a working Ubuntu network adapter name
+  addr_infos = Socket.getifaddrs
+  addr_infos.each do |info|
+    a = info.addr
+    if a and a.ip? and not a.ip_address.start_with?("127.")
+     return info.name
+     end
+  end
+  return "eth0"  # fall back to an old reliable name
+end
+
+Vagrant.configure("2") do |config|
+  ## Choose your base box
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.hostname = "master1"
+  config.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+      v.cpus = 1
+      v.linked_clone = true
+      v.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+      # v.customize ["modifyvm", :id, "--natnet1", "192.168.128.0/24"]  # do not use 10.x network for NAT
+  end
+
+  interface_guesses = [get_good_ifc(), 'en0: Ethernet', 'en1: Wi-Fi (AirPort)']
+
+  ## For masterless, mount your salt file root
+  # config.vm.synced_folder "salt/roots/", "/srv/salt/"
+
+  ## Use all the defaults:
+  config.vm.provision :salt do |salt|
+    salt.install_master = true
+    salt.bootstrap_options = "-D"
+    salt.always_install = true
+    salt.master_config = "/etc/salt/master.d/master.conf"
+    salt.minion_config = "/etc/salt/minion.d/minion.conf"
+    #salt.run_highstate = true
+  end
+end
